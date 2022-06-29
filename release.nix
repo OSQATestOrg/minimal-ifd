@@ -24,7 +24,7 @@ let
       bintools = pkgs.binutils.bintools;
 
       # Toggle this to something else to break IFD.
-      system = "x86_64-linux";
+      system = "x86_64-darwin";
 
       src = pkgs.fetchurl {
         url = "mirror://gnu/hello/2.10.tar.gz";
