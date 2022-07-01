@@ -19,7 +19,7 @@ let
     builtins.derivation rec {
       name = "hello-2.10";
       builder = "''${pkgs.bash}/bin/bash" ;
-      args = [ ${hello-builder}/bin/hello-builder ];
+      args = [ ${hello-builder.out}/bin/hello-builder ];
       inherit (pkgs) gnutar gzip gnumake gcc coreutils gawk gnused gnugrep;
       bintools = pkgs.binutils.bintools;
 
