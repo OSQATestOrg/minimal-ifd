@@ -3,7 +3,7 @@
 let
   pkgs = import <nixpkgs> {};
 
-  hello-builder = pkgs.writeShellScriptBin "hello-builder" ''
+  hello-builder = pkgs.writeTextFile "hello-builder" ''
     export PATH="$gnutar/bin:$gcc/bin:$gnumake/bin:$coreutils/bin:$gawk/bin:$gzip/bin:$gnugrep/bin:$gnused/bin:$bintools/bin"
     tar -xzf $src
     cd hello-2.10
