@@ -3,15 +3,6 @@
 let
   pkgs = import <nixpkgs> {};
 
-  hello-builder = pkgs.writeTextFile "hello-builder" ''
-    export PATH="$gnutar/bin:$gcc/bin:$gnumake/bin:$coreutils/bin:$gawk/bin:$gzip/bin:$gnugrep/bin:$gnused/bin:$bintools/bin"
-    tar -xzf $src
-    cd hello-2.10
-    ./configure --prefix=$out
-    make
-    make install
-  '';
-
   # Create a derivation which, when built, writes some Nix code to
   # its $out path.
   nested-drv = pkgs.writeText "nested-drv" ''
@@ -19,7 +10,7 @@ let
     builtins.derivation rec {
       name = "hello-2.10";
       builder = "''${pkgs.bash}/bin/bash" ;
-      args = [ ${hello-builder}/bin/hello-builder ];
+      args = [ ./hello-builder.sh ];
       inherit (pkgs) gnutar gzip gnumake gcc coreutils gawk gnused gnugrep;
       bintools = pkgs.binutils.bintools;
 
