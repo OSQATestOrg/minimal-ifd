@@ -44,6 +44,8 @@ let
     stdenv.mkDerivation {
       name = "outer";
       buildInputs = [ ${nested} ];
+      installPhase = "mkdir $out";
+      dontUnpack = true;
     }
   '';
 
