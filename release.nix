@@ -4,12 +4,10 @@ let
   pkgs = import <nixpkgs> {};
 
   hello-builder = pkgs.writeShellScriptBin "hello-builder" ''
-    export PATH="$gnutar/bin:$gcc/bin:$gnumake/bin:$coreutils/bin:$gawk/bin:$gzip/bin:$gnugrep/bin:$gnused/bin:$bintools/bin"
+    export PATH="$gnutar/bin:$gcc/bin:$gnumake/bin:$glib/bin:$coreutils/bin:$gawk/bin:$gzip/bin:$gnugrep/bin:$gnused/bin:$bintools/bin"
     tar -xzf $src
-    cd hello-2.10
-    ./configure --prefix=$out
-    make
-    make install
+    cd hello-2.1.90
+    mkdir $out
   '';
 
   # Create a derivation which, when built, writes some Nix code to
@@ -17,18 +15,18 @@ let
   nested-drv = pkgs.writeText "nested-drv" ''
     with (import <nixpkgs> {});
     builtins.derivation rec {
-      name = "hello-2.10";
+      name = "hello-2.1.90";
       builder = "''${pkgs.bash}/bin/bash" ;
       args = [ ${hello-builder}/bin/hello-builder ];
-      inherit (pkgs) gnutar gzip gnumake gcc coreutils gawk gnused gnugrep;
+      inherit (pkgs) gnutar gzip gnumake gcc glib coreutils gawk gnused gnugrep;
       bintools = pkgs.binutils.bintools;
 
       # Toggle this to something else to break IFD.
       system = "x86_64-darwin";
 
       src = pkgs.fetchurl {
-        url = "mirror://gnu/hello/2.10.tar.gz";
-        sha256 = "0ssi1wpaf7plaswqqjwigppsg5fyh99vdlb9kzl7c9lng89ndq1i";
+        url = "https://alpha.gnu.org/gnu/hello/hello-2.1.90.tar.gz";
+        sha256 = "WRPsr3et/7+fZlifqPjOLSC2yDx2fkue0C4+NRzoqWc=";
       };
     }
   '';
@@ -44,6 +42,8 @@ let
     stdenv.mkDerivation {
       name = "outer";
       buildInputs = [ ${nested} ];
+      installPhase = "mkdir $out";
+      dontUnpack = true;
     }
   '';
 
